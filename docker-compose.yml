@@ -7,7 +7,7 @@ services:
             - .env
     edu_service:
         build: .
-        command: python manage.py runserver 0.0.0.0:8000
+        command: sh -c "./bin/wait_for.sh db:5432 -- ./bin/startup.sh"
         env_file: 
             - .env
         volumes:
