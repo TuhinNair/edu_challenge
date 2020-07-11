@@ -7,3 +7,16 @@
 
 ### Secrets
 - *.env* should not be checked into version control but for this challenge I've left it out of *.gitignore*.
+
+
+## How to run it
+
+### Build
+
+`docker-compose up`
+
+### Creating a superuser 
+
+Enter the service container and run 
+
+`pipenv run python manage.py createsuperuser --email <admin@example.com> --username <admin>`
