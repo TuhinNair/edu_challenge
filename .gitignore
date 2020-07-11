@@ -1,0 +1,7 @@
+*.pyc
+*/*.pyc 
+*/*/*.pyc
+.cache
+__pycache__
+dist/
+build/
