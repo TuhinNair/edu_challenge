@@ -10,7 +10,7 @@ class SchoolSerializer(serializers.ModelSerializer):
 class StudentSerializer(serializers.ModelSerializer):
     def validate(self, data): 
         school =  data.get('school', None)
-        if school: 
+        if school:
             school_limit = School.objects.get(pk=school.id).max_student_count
             students_enrolled = len(Student.objects.filter(school__id=school.id))
             #Add a GTE check because no Model level validation is in place.

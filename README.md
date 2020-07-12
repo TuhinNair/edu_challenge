@@ -38,6 +38,10 @@
     - Authentication
     - Session Management 
     - Authorization
+
+### HTTP PUT 
+
+- The id key is ignored, meaning an invalid id in the request body will make no difference. Postel's law but probably something that would depend on the resource involved and whether the API is public or not.
     
 ### Tests
 

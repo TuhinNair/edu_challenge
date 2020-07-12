@@ -6,7 +6,7 @@ import uuid
 class School(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     name = models.CharField(max_length=20)
-    max_student_count = models.PositiveIntegerField()
+    max_student_count = models.PositiveIntegerField() # 0 is valid
 
     def __str__(self):
         return self.name
