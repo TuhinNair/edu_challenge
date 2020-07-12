@@ -12,6 +12,7 @@
 
 - The spec defines id's to be 20 char but also mentions that UUID is an option. The use of the UUIDField invalidates the 20 char limit and sacrifices readibility. TODO: A human readable/slug implementation (with sufficient entropy if desired) 
 
+
 ## How to run it
 
 ### Build
