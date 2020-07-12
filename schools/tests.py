@@ -28,8 +28,19 @@ class SchoolTest(APITestCase):
         School.objects.create(name='school_foo', max_student_count=23)
         test_school = School.objects.get(name='school_foo')
         url = '/schools/{}/'.format(str(test_school.id))
+        self.assertRaises(School.DoesNotExist,  School.objects.get, name='school_bar')
         data = {'id': test_school.id, 'name': 'school_bar', 'max_student_count': 100}
         response = self.client.put(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertRaises(School.DoesNotExist,  School.objects.get, name='school_foo')
+    
+    def test_patch_school(self):
+        School.objects.create(name='school_foo', max_student_count=23)
+        test_school = School.objects.get(name='school_foo')
+        url = '/schools/{}/'.format(str(test_school.id))
+        self.assertRaises(School.DoesNotExist,  School.objects.get, name='school_bar')
+        data = {'name': 'school_bar'}
+        response = self.client.patch(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertRaises(School.DoesNotExist,  School.objects.get, name='school_foo')
 
@@ -64,8 +75,21 @@ class StudentTest(APITestCase):
         Student.objects.create(first_name='foo', last_name='bar', school_id=test_school)
         test_student = Student.objects.get(first_name='foo')
         url = '/students/{}/'.format(str(test_student.id))
+        self.assertRaises(Student.DoesNotExist,  Student.objects.get, first_name='bar')
         data = {'id': test_student.id, 'first_name': 'bar', 'last_name': 'foo', 'school_id':test_school.id}
         response = self.client.put(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertRaises(Student.DoesNotExist,  Student.objects.get, first_name='foo')
+    
+    def test_patch_students(self):
+        test_school = School.objects.create(name='school_foo', max_student_count=23)
+
+        Student.objects.create(first_name='foo', last_name='bar', school_id=test_school)
+        test_student = Student.objects.get(first_name='foo')
+        url = '/students/{}/'.format(str(test_student.id))
+        self.assertRaises(Student.DoesNotExist,  Student.objects.get, first_name='bar')
+        data = {'first_name': 'bar'}
+        response = self.client.patch(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertRaises(Student.DoesNotExist,  Student.objects.get, first_name='foo')
 
