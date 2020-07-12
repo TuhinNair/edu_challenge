@@ -17,7 +17,7 @@
 ### Containerization
 - In a production application consider a multi-stage build to minizmize image size.
 
-- The script to check for service availability is from here https://github.com/Eficode/wait-for as recommended by the docker-compose docs. See https://docs.docker.com/compose/startup-order/
+- The script to check for a successful TCP connection is from here https://github.com/Eficode/wait-for as recommended by the docker-compose docs. See https://docs.docker.com/compose/startup-order/
 
 ### Secrets
 - *.env* should not be checked into version control but for this challenge I've left it out of *.gitignore*.
@@ -31,6 +31,14 @@
 
 - Naive implementation of business logic. An additional data layer check would be better for data integrity.
 
+### Security
+
+- Considering time constraints and specs (i.e the lack of security features as requirements) this project does not include the very important following (in a production application I'd probably plan with this as my starting point)
+    - TLS 
+    - Authentication
+    - Session Management 
+    - Authorization
+    
 ### Tests
 
 - Some of the tests use shortcut checks for brevity. TODO: Add data integrity checks
