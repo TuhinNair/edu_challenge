@@ -1,5 +1,19 @@
 # manatal_edu
 
+## How to run it
+
+### Build/Run
+
+`docker-compose up`
+
+### Creating a superuser 
+
+Enter the service container and run 
+
+`pipenv run python manage.py createsuperuser --email <admin@example.com> --username <admin>`
+
+## Notes
+
 ### Containerization
 - In a production application consider a multi-stage build to minizmize image size.
 
@@ -16,14 +30,7 @@
 ### Business Model Validation
 
 - Naive implementation of business logic. A data layer check would be better for data integrity.
-## How to run it
 
-### Build/Run
+### Tests
 
-`docker-compose up`
-
-### Creating a superuser 
-
-Enter the service container and run 
-
-`pipenv run python manage.py createsuperuser --email <admin@example.com> --username <admin>`
+- Some of the tests use shortcut checks for brevity. TODO: Add data integrity checks

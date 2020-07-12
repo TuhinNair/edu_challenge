@@ -23,7 +23,6 @@ class SchoolHasStudentTest(APITestCase):
     
     def test_get_student_instance_of_school(self):
         url = '/schools/{}/students/{}/'.format(str(self.test_school_1.id), str(self.test_student_1.id))
-        print(url)
         response = self.client.get(url)
         expected = {'id': str(self.test_student_1.id), 'first_name':'foo', 'last_name':'bar', 'school': self.test_school_1.id }
         self.assertEqual(response.data, expected)
