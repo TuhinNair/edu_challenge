@@ -16,13 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from schools import views
-from schools.routers import router
-
-
+from schools.routers import router, schools_router
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('', include(schools_router.urls)),
 
 ]
