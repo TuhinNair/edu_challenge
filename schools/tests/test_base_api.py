@@ -1,6 +1,6 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .models import School, Student
+from schools.models import School, Student
 # Create your tests here.
 
 class SchoolTest(APITestCase):
