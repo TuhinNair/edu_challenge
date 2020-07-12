@@ -10,10 +10,10 @@ class SchoolTest(APITestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(School.objects.count(), 1)
-        self.assertEqual('school_foo', response.data['name'])
-        self.assertEqual(100, response.data['max_student_count'])
-        self.assertNotEqual('this should not work', response.data['id'])
-        self.assertNotEqual('', response.data['id'])
+        self.assertEqual(response.data['name'], 'school_foo')
+        self.assertEqual(response.data['max_student_count'], 100)
+        self.assertNotEqual(response.data['id'], 'this should not work')
+        self.assertNotEqual(response.data['id'], '')
     
     def test_get_schools(self):
         School.objects.create(name='school_foo', max_student_count=23)
@@ -22,7 +22,16 @@ class SchoolTest(APITestCase):
 
         url = '/schools/'
         response = self.client.get(url)
-        self.assertEqual(3, len(response.data))
+        self.assertEqual(len(response.data), 3)
+
+    def test_put_school(self):
+        School.objects.create(name='school_foo', max_student_count=23)
+        test_school = School.objects.get(name='school_foo')
+        url = '/schools/{}/'.format(str(test_school.id))
+        data = {'id': test_school.id, 'name': 'school_bar', 'max_student_count': 100}
+        response = self.client.put(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertRaises(School.DoesNotExist,  School.objects.get, name='school_foo')
 
 class StudentTest(APITestCase):
     def test_post_student(self):
@@ -33,21 +42,35 @@ class StudentTest(APITestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Student.objects.count(), 1)
-        self.assertEqual('foo', response.data['first_name'])
-        self.assertEqual(test_school.id, response.data['school_id'])
-        self.assertNotEqual('this should not work', response.data['id'])
-        self.assertNotEqual('', response.data['id'])
+        self.assertEqual(response.data['first_name'], 'foo')
+        self.assertEqual(response.data['school_id'], test_school.id)
+        self.assertNotEqual(response.data['id'], 'this should not work')
+        self.assertNotEqual(response.data['id'], '')
     
     def test_get_students(self):
         test_school = School.objects.create(name='school_bar', max_student_count=23)
 
-        Student.objects.create(first_name='fooda', last_name='bar', school_id=test_school)
         Student.objects.create(first_name='foo', last_name='bar', school_id=test_school)
-        Student.objects.create(first_name='fodao', last_name='bar', school_id=test_school)
+        Student.objects.create(first_name='foo', last_name='bar', school_id=test_school)
+        Student.objects.create(first_name='foo', last_name='bar', school_id=test_school)
 
         url = '/students/'
         response = self.client.get(url)
-        self.assertEqual(3, len(response.data))
+        self.assertEqual(len(response.data), 3)
+    
+    def test_put_students(self):
+        test_school = School.objects.create(name='school_foo', max_student_count=23)
+
+        Student.objects.create(first_name='foo', last_name='bar', school_id=test_school)
+        test_student = Student.objects.get(first_name='foo')
+        url = '/students/{}/'.format(str(test_student.id))
+        data = {'id': test_student.id, 'first_name': 'bar', 'last_name': 'foo', 'school_id':test_school.id}
+        response = self.client.put(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertRaises(Student.DoesNotExist,  Student.objects.get, first_name='foo')
+
+        
+
     
 
 

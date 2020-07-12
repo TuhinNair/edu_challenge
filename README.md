@@ -10,7 +10,7 @@
 
 ### Model
 
-- The spec defines id's to be 20 char but also mentions that UUID is an option. The use of the UUIDField invalidates the 20 char limit and sacrifices readibility. For a human readable implementation (with sufficient entropy if desired) I've decided to defer for later (i.e after I get the rest of the app running and have time to spare).
+- The spec defines id's to be 20 char but also mentions that UUID is an option. The use of the UUIDField invalidates the 20 char limit and sacrifices readibility. TODO: A human readable/slug implementation (with sufficient entropy if desired) 
 
 ## How to run it
 

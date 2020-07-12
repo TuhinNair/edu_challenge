@@ -20,5 +20,5 @@ class Student(models.Model):
     school_id = models.ForeignKey(School, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "%s %s" % (self.first_name, self.last_name)
+        return '{} {}'.format(self.first_name, self.last_name)
     
