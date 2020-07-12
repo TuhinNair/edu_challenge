@@ -134,63 +134,63 @@ class StudentTest(APITestCase):
 
     def test_post_student(self):
         url = '/students/'
-        data = {'id': 'this should not be the id', 'first_name': 'foo', 'last_name': 'bar',  'school_id': self.test_school.id}
+        data = {'id': 'this should not be the id', 'first_name': 'foo', 'last_name': 'bar',  'school': self.test_school.id}
         response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Student.objects.count(), 1)
         self.assertEqual(response.data['first_name'], 'foo')
-        self.assertEqual(response.data['school_id'],self. test_school.id)
+        self.assertEqual(response.data['school'],self.test_school.id)
         self.assertNotEqual(response.data['id'], 'this should not be the id')
         self.assertNotEqual(response.data['id'], '')
     
     def test_post_student_no_id_request(self):
         url = '/students/'
-        data = {'first_name': 'foo', 'last_name': 'bar',  'school_id': self.test_school.id}
+        data = {'first_name': 'foo', 'last_name': 'bar',  'school': self.test_school.id}
         response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Student.objects.count(), 1)
         self.assertEqual(response.data['first_name'], 'foo')
-        self.assertEqual(response.data['school_id'],self. test_school.id)
+        self.assertEqual(response.data['school'],self. test_school.id)
         self.assertNotEqual(response.data['id'], '')
     
     def test_post_student_invalid_first_name(self):
         url = '/students/'
-        data = {'first_name': 'This is longer than 20 characters', 'last_name': 'bar',  'school_id': self.test_school.id}
+        data = {'first_name': 'This is longer than 20 characters', 'last_name': 'bar',  'school': self.test_school.id}
         response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     
     def test_post_student_invalid_last_name(self):
         url = '/students/'
-        data = {'first_name': 'foo', 'last_name': 'This is longer than 20 characters',  'school_id': self.test_school.id}
+        data = {'first_name': 'foo', 'last_name': 'This is longer than 20 characters',  'school': self.test_school.id}
         response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     
-    def test_post_student_invalid_school_id(self):
+    def test_post_student_invalid_school(self):
         url = '/students/'
-        data = {'first_name': 'foo', 'last_name': 'This is longer than 20 characters',  'school_id': 'invalid_school_id'}
+        data = {'first_name': 'foo', 'last_name': 'This is longer than 20 characters',  'school': 'invalid_school'}
         response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     
     def test_post_student_no_first_name(self):
         url = '/students/'
-        data = {'last_name': 'bar',  'school_id': self.test_school.id}
+        data = {'last_name': 'bar',  'school': self.test_school.id}
         response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     
     def test_post_student_no_last_name(self):
         url = '/students/'
-        data = {'first_name': 'foo',  'school_id': self.test_school.id}
+        data = {'first_name': 'foo',  'school': self.test_school.id}
         response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     
-    def test_post_student_no_school_id(self):
+    def test_post_student_no_school(self):
         url = '/students/'
         data = {'first_name': 'foo',  'last_name': 'foo'}
         response = self.client.post(url, data)
@@ -198,49 +198,49 @@ class StudentTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     
     def test_get_students(self):
-        Student.objects.create(first_name='foo', last_name='bar', school_id=self.test_school)
-        Student.objects.create(first_name='foo', last_name='bar', school_id=self.test_school)
-        Student.objects.create(first_name='foo', last_name='bar', school_id=self.test_school)
+        Student.objects.create(first_name='foo', last_name='bar', school=self.test_school)
+        Student.objects.create(first_name='foo', last_name='bar', school=self.test_school)
+        Student.objects.create(first_name='foo', last_name='bar', school=self.test_school)
         url = '/students/'
         response = self.client.get(url)
 
         self.assertEqual(len(response.data), 3)
     
     def test_put_students(self):
-        Student.objects.create(first_name='foo', last_name='bar', school_id=self.test_school)
+        Student.objects.create(first_name='foo', last_name='bar', school=self.test_school)
         test_student = Student.objects.get(first_name='foo')
         url = '/students/{}/'.format(str(test_student.id))
 
         self.assertRaises(Student.DoesNotExist,  Student.objects.get, first_name='bar')
         
-        data = {'id': test_student.id, 'first_name': 'bar', 'last_name': 'foo', 'school_id':self.test_school.id}
+        data = {'id': test_student.id, 'first_name': 'bar', 'last_name': 'foo', 'school':self.test_school.id}
         response = self.client.put(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertRaises(Student.DoesNotExist,  Student.objects.get, first_name='foo')
     
     def test_put_students_no_first_name(self):
-        Student.objects.create(first_name='foo', last_name='bar', school_id=self.test_school)
+        Student.objects.create(first_name='foo', last_name='bar', school=self.test_school)
         test_student = Student.objects.get(first_name='foo')
         url = '/students/{}/'.format(str(test_student.id))
 
-        data = {'id': test_student.id, 'last_name': 'foo', 'school_id':self.test_school.id}
+        data = {'id': test_student.id, 'last_name': 'foo', 'school':self.test_school.id}
         response = self.client.put(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     
     def test_put_students_no_last_name(self):
-        Student.objects.create(first_name='foo', last_name='bar', school_id=self.test_school)
+        Student.objects.create(first_name='foo', last_name='bar', school=self.test_school)
         test_student = Student.objects.get(first_name='foo')
         url = '/students/{}/'.format(str(test_student.id))
 
-        data = {'id': test_student.id, 'first_name': 'bar', 'school_id':self.test_school.id}
+        data = {'id': test_student.id, 'first_name': 'bar', 'school':self.test_school.id}
         response = self.client.put(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     
-    def test_put_students_no_school_id(self):
-        Student.objects.create(first_name='foo', last_name='bar', school_id=self.test_school)
+    def test_put_students_no_school(self):
+        Student.objects.create(first_name='foo', last_name='bar', school=self.test_school)
         test_student = Student.objects.get(first_name='foo')
         url = '/students/{}/'.format(str(test_student.id))
 
@@ -250,7 +250,7 @@ class StudentTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_patch_students(self):
-        Student.objects.create(first_name='foo', last_name='bar', school_id=self.test_school)
+        Student.objects.create(first_name='foo', last_name='bar', school=self.test_school)
         test_student = Student.objects.get(first_name='foo')
         url = '/students/{}/'.format(str(test_student.id))
 
@@ -263,7 +263,7 @@ class StudentTest(APITestCase):
         self.assertRaises(Student.DoesNotExist,  Student.objects.get, first_name='foo')
     
     def test_delete_student(self):
-        Student.objects.create(first_name='foo', last_name='bar', school_id=self.test_school)
+        Student.objects.create(first_name='foo', last_name='bar', school=self.test_school)
         test_student = Student.objects.get(first_name='foo')
         url = '/students/{}/'.format(str(test_student.id))
 
@@ -277,39 +277,39 @@ class StudentTest(APITestCase):
     def test_post_student_over_school_limit(self):
         School.objects.create(name='school_bar', max_student_count=2)
         max_two_school = School.objects.get(name='school_bar')
-        Student.objects.create(first_name='foo', last_name='bar', school_id=max_two_school)
-        Student.objects.create(first_name='foo', last_name='bar', school_id=max_two_school)
+        Student.objects.create(first_name='foo', last_name='bar', school=max_two_school)
+        Student.objects.create(first_name='foo', last_name='bar', school=max_two_school)
 
         url = '/students/'
-        data = {'first_name': 'foo', 'last_name': 'bar',  'school_id': max_two_school.id}
+        data = {'first_name': 'foo', 'last_name': 'bar',  'school': max_two_school.id}
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     
     def test_put_student_over_school_limit(self):
         School.objects.create(name='school_bar', max_student_count=2)
         max_two_school = School.objects.get(name='school_bar')
-        Student.objects.create(first_name='foo', last_name='bar', school_id=max_two_school)
-        Student.objects.create(first_name='foo', last_name='bar', school_id=max_two_school)
+        Student.objects.create(first_name='foo', last_name='bar', school=max_two_school)
+        Student.objects.create(first_name='foo', last_name='bar', school=max_two_school)
 
-        Student.objects.create(first_name='bar', last_name='foo', school_id=self.test_school)
+        Student.objects.create(first_name='bar', last_name='foo', school=self.test_school)
         test_student = Student.objects.get(first_name='bar')
         
         url = '/students/{}/'.format(str(test_student.id))
-        data = {'first_name': 'bar', 'last_name': 'foo',  'school_id': max_two_school.id}
+        data = {'first_name': 'bar', 'last_name': 'foo',  'school': max_two_school.id}
         response = self.client.put(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     
     def test_patch_student_over_school_limit(self):
         School.objects.create(name='school_bar', max_student_count=2)
         max_two_school = School.objects.get(name='school_bar')
-        Student.objects.create(first_name='foo', last_name='bar', school_id=max_two_school)
-        Student.objects.create(first_name='foo', last_name='bar', school_id=max_two_school)
+        Student.objects.create(first_name='foo', last_name='bar', school=max_two_school)
+        Student.objects.create(first_name='foo', last_name='bar', school=max_two_school)
 
-        Student.objects.create(first_name='bar', last_name='foo', school_id=self.test_school)
+        Student.objects.create(first_name='bar', last_name='foo', school=self.test_school)
         test_student = Student.objects.get(first_name='bar')
         
         url = '/students/{}/'.format(str(test_student.id))
-        data = {'school_id': max_two_school.id}
+        data = {'school': max_two_school.id}
         response = self.client.patch(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 

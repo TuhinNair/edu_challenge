@@ -9,10 +9,10 @@ class SchoolSerializer(serializers.ModelSerializer):
 
 class StudentSerializer(serializers.ModelSerializer):
     def validate(self, data): 
-        school_id =  data.get('school_id', None)
-        if school_id: 
-            school_limit = School.objects.get(pk=school_id.id).max_student_count
-            students_enrolled = len(Student.objects.filter(school_id__id=school_id.id))
+        school =  data.get('school', None)
+        if school: 
+            school_limit = School.objects.get(pk=school.id).max_student_count
+            students_enrolled = len(Student.objects.filter(school__id=school.id))
             #Add a GTE check because no Model level validation is in place.
             if students_enrolled >= school_limit:
                 raise serializers.ValidationError('School is at max capacity')
@@ -20,4 +20,4 @@ class StudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Student
-        fields = ['id', 'first_name', 'last_name', 'school_id']
+        fields = ['id', 'first_name', 'last_name', 'school']

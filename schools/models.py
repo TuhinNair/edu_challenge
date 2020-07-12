@@ -15,7 +15,7 @@ class Student(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
-    school_id = models.ForeignKey(School, on_delete=models.CASCADE)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
