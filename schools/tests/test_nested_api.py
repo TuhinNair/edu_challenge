@@ -26,4 +26,33 @@ class SchoolHasStudentTest(APITestCase):
         response = self.client.get(url)
         expected = {'id': str(self.test_student_1.id), 'first_name':'foo', 'last_name':'bar', 'school': self.test_school_1.id }
         self.assertEqual(response.data, expected)
+    
+    def test_post_student_instance_of_school(self):
+        url = '/schools/{}/students/'.format(str(self.test_school_1.id))
+        data = {'first_name': 'foo', 'last_name': 'bar',  'school': self.test_school_1.id}
+        response = self.client.post(url, data)
 
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['first_name'], 'foo')
+        self.assertEqual(response.data['school'],self. test_school_1.id)
+        self.assertNotEqual(response.data['id'], '')
+    
+    def test_put_student_instance_of_school(self):
+        url = '/schools/{}/students/{}/'.format(str(self.test_school_1.id), str(self.test_student_1.id))
+        data = {'id': str(self.test_student_1.id), 'first_name': 'foobar', 'last_name': 'bar',  'school': self.test_school_1.id}
+
+        self.assertRaises(Student.DoesNotExist,  Student.objects.get, first_name='foobar')
+
+        response = self.client.put(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertRaises(Student.DoesNotExist,  Student.objects.get, first_name='foo')
+    
+    def test_patch_student_instance_of_school(self):
+        url = '/schools/{}/students/{}/'.format(str(self.test_school_1.id), str(self.test_student_1.id))
+        data = {'first_name': 'foobar'}
+
+        self.assertRaises(Student.DoesNotExist,  Student.objects.get, first_name='foobar')
+
+        response = self.client.patch(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertRaises(Student.DoesNotExist,  Student.objects.get, first_name='foo')
