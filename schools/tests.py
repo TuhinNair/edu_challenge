@@ -16,6 +16,20 @@ class SchoolTest(APITestCase):
         self.assertNotEqual(response.data['id'], 'this should not be the id')
         self.assertNotEqual(response.data['id'], '')
     
+    def test_post_school_no_name(self):
+        url = '/schools/'
+        data = { 'max_student_count': 100}
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    
+    def test_post_school_no_max_student_count(self):
+        url = '/schools/'
+        data = {'name': 'school_foo'}
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    
     def test_post_school_no_id_request(self):
         url = '/schools/'
         data = {'name': 'school_foo', 'max_student_count': 100}
@@ -63,6 +77,30 @@ class SchoolTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertRaises(School.DoesNotExist,  School.objects.get, name='school_foo')
     
+    def test_put_school_no_name(self):
+        School.objects.create(name='school_foo', max_student_count=23)
+        test_school = School.objects.get(name='school_foo')
+        url = '/schools/{}/'.format(str(test_school.id))
+
+        self.assertRaises(School.DoesNotExist,  School.objects.get, name='school_bar')
+
+        data = {'id': test_school.id, 'max_student_count': 100}
+        response = self.client.put(url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    
+    def test_put_school_no_student_max_count(self):
+        School.objects.create(name='school_foo', max_student_count=23)
+        test_school = School.objects.get(name='school_foo')
+        url = '/schools/{}/'.format(str(test_school.id))
+
+        self.assertRaises(School.DoesNotExist,  School.objects.get, name='school_bar')
+
+        data = {'id': test_school.id, 'name': 'school_bar'}
+        response = self.client.put(url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_patch_school(self):
         School.objects.create(name='school_foo', max_student_count=23)
         test_school = School.objects.get(name='school_foo')
@@ -138,6 +176,27 @@ class StudentTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     
+    def test_post_student_no_first_name(self):
+        url = '/students/'
+        data = {'last_name': 'bar',  'school_id': self.test_school.id}
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    
+    def test_post_student_no_last_name(self):
+        url = '/students/'
+        data = {'first_name': 'foo',  'school_id': self.test_school.id}
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    
+    def test_post_student_no_school_id(self):
+        url = '/students/'
+        data = {'first_name': 'foo',  'last_name': 'foo'}
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    
     def test_get_students(self):
         Student.objects.create(first_name='foo', last_name='bar', school_id=self.test_school)
         Student.objects.create(first_name='foo', last_name='bar', school_id=self.test_school)
@@ -160,6 +219,36 @@ class StudentTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertRaises(Student.DoesNotExist,  Student.objects.get, first_name='foo')
     
+    def test_put_students_no_first_name(self):
+        Student.objects.create(first_name='foo', last_name='bar', school_id=self.test_school)
+        test_student = Student.objects.get(first_name='foo')
+        url = '/students/{}/'.format(str(test_student.id))
+
+        data = {'id': test_student.id, 'last_name': 'foo', 'school_id':self.test_school.id}
+        response = self.client.put(url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    
+    def test_put_students_no_last_name(self):
+        Student.objects.create(first_name='foo', last_name='bar', school_id=self.test_school)
+        test_student = Student.objects.get(first_name='foo')
+        url = '/students/{}/'.format(str(test_student.id))
+
+        data = {'id': test_student.id, 'first_name': 'bar', 'school_id':self.test_school.id}
+        response = self.client.put(url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    
+    def test_put_students_no_school_id(self):
+        Student.objects.create(first_name='foo', last_name='bar', school_id=self.test_school)
+        test_student = Student.objects.get(first_name='foo')
+        url = '/students/{}/'.format(str(test_student.id))
+
+        data = {'id': test_student.id, 'first_name': 'bar', 'last_name': 'foo'}
+        response = self.client.put(url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_patch_students(self):
         Student.objects.create(first_name='foo', last_name='bar', school_id=self.test_school)
         test_student = Student.objects.get(first_name='foo')
