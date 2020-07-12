@@ -4,13 +4,13 @@
 
 ### Build/Run
 
-`docker-compose up`
+-   `docker-compose up`
 
-### Creating a superuser 
+### Creating a superuser (Admin)
 
-Enter the service container and run 
+- Enter the service container and run 
 
-`pipenv run python manage.py createsuperuser --email <admin@example.com> --username <admin>`
+    `pipenv run python manage.py createsuperuser --email <admin@example.com> --username <admin>`
 
 ## Notes
 
@@ -25,12 +25,14 @@ Enter the service container and run
 
 ### Model
 
-- The spec defines id's to be 20 char but also mentions that UUID is an option. The use of the UUIDField invalidates the 20 char limit and sacrifices readibility. TODO: A human readable/slug implementation (with sufficient entropy if desired) with integrity checks. 
+- The spec defines id's to be 20 char but also mentions that UUID is an option. The use of the UUIDField invalidates the 20 char limit and sacrifices url readibility. TODO: A human readable/slug implementation (with sufficient entropy if desired) with integrity checks. 
 
 ### Business Model Validation
 
-- Naive implementation of business logic. A data layer check would be better for data integrity.
+- Naive implementation of business logic. An additional data layer check would be better for data integrity.
 
 ### Tests
 
 - Some of the tests use shortcut checks for brevity. TODO: Add data integrity checks
+
+    `sudo docker-compose run edu_service python manage.py test`
