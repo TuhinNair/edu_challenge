@@ -184,6 +184,45 @@ class StudentTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Student.objects.count(), 0)
+    
+    def test_post_student_over_school_limit(self):
+        School.objects.create(name='school_bar', max_student_count=2)
+        max_two_school = School.objects.get(name='school_bar')
+        Student.objects.create(first_name='foo', last_name='bar', school_id=max_two_school)
+        Student.objects.create(first_name='foo', last_name='bar', school_id=max_two_school)
+
+        url = '/students/'
+        data = {'first_name': 'foo', 'last_name': 'bar',  'school_id': max_two_school.id}
+        response = self.client.post(url, data)
+        self.assertNotEqual(response.status_code, status.HTTP_201_CREATED)
+    
+    def test_put_student_over_school_limit(self):
+        School.objects.create(name='school_bar', max_student_count=2)
+        max_two_school = School.objects.get(name='school_bar')
+        Student.objects.create(first_name='foo', last_name='bar', school_id=max_two_school)
+        Student.objects.create(first_name='foo', last_name='bar', school_id=max_two_school)
+
+        Student.objects.create(first_name='bar', last_name='foo', school_id=self.test_school)
+        test_student = Student.objects.get(first_name='bar')
+        
+        url = '/students/{}/'.format(str(test_student.id))
+        data = {'first_name': 'bar', 'last_name': 'foo',  'school_id': max_two_school.id}
+        response = self.client.put(url, data)
+        self.assertNotEqual(response.status_code, status.HTTP_200_OK)
+    
+    def test_patch_student_over_school_limit(self):
+        School.objects.create(name='school_bar', max_student_count=2)
+        max_two_school = School.objects.get(name='school_bar')
+        Student.objects.create(first_name='foo', last_name='bar', school_id=max_two_school)
+        Student.objects.create(first_name='foo', last_name='bar', school_id=max_two_school)
+
+        Student.objects.create(first_name='bar', last_name='foo', school_id=self.test_school)
+        test_student = Student.objects.get(first_name='bar')
+        
+        url = '/students/{}/'.format(str(test_student.id))
+        data = {'school_id': max_two_school.id}
+        response = self.client.patch(url, data)
+        self.assertNotEqual(response.status_code, status.HTTP_200_OK)
 
 
 
