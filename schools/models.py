@@ -11,8 +11,6 @@ class School(models.Model):
     def __str__(self):
         return self.name
     
-
-
 class Student(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     first_name = models.CharField(max_length=20)

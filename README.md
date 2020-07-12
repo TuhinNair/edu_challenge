@@ -7,11 +7,11 @@
 
 ### Secrets
 - *.env* should not be checked into version control but for this challenge I've left it out of *.gitignore*.
+- Ideally injected during CI builds.
 
 ### Model
 
-- The spec defines id's to be 20 char but also mentions that UUID is an option. The use of the UUIDField invalidates the 20 char limit and sacrifices readibility. TODO: A human readable/slug implementation (with sufficient entropy if desired) 
-
+- The spec defines id's to be 20 char but also mentions that UUID is an option. The use of the UUIDField invalidates the 20 char limit and sacrifices readibility. TODO: A human readable/slug implementation (with sufficient entropy if desired) with integrity checks. 
 
 ## How to run it
 
