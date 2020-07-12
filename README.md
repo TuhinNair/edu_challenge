@@ -15,10 +15,10 @@
 
 ### Business Model Validation
 
-- Naieve implementation of business logic. A data layer check would be better for data integrity.
+- Naive implementation of business logic. A data layer check would be better for data integrity.
 ## How to run it
 
-### Build
+### Build/Run
 
 `docker-compose up`
 
