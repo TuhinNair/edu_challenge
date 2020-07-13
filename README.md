@@ -4,7 +4,9 @@
 
 ### Build/Run
 
--   `docker-compose up`
+- Docker is a pre-requisite  
+
+     `docker-compose up`
 
 ### Creating a superuser (Admin)
 
@@ -45,6 +47,7 @@
     
 ### Tests
 
-- Some of the tests use shortcut checks for brevity. TODO: Add data integrity checks
+- Some of the tests use shortcut checks for brevity (Like a large response to a GET request is checked by proxy of length). TODO: Add data integrity checks
 
     `sudo docker-compose run edu_service python manage.py test`
+
